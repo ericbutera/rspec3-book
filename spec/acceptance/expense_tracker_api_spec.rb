@@ -16,11 +16,15 @@ module ExpenseTracker
       expense.merge('id' => parsed['expense_id'])
     end
 
+    let (:ledger) { instance_double('ExpenseTracker::Ledger') } # p.67
+
     def app
-      ExpenseTracker::API.new
+      ExpenseTracker::API.new(ledger: ledger)
     end
 
-    it 'records submitted expenses' do
+    it 'records submitted expenses' do 
+      pending 'Need to persist data'
+
       coffee = post_expense(
         'payee' => 'Starbucks',
         'amount' => 5.75,
@@ -38,14 +42,12 @@ module ExpenseTracker
         'amount' => 95.20,
         'date' => '2017-06-11'
       )
-    end
 
-    it 'records submitted expenses' do 
-      pending 'Need to persist expenses'
+      byebug
       get '/expenses/2017-06-10'
       expect(last_response.status).to eq(200)
 
-      expenses = JSON.parse(last_response.body)
+      expenses = JSON.parse(last_response.body) # p.57
       expect(expenses).to contain_exactly(coffee, zoo)
     end
   end
